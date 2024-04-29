@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <title>Chat Application</title>
+</head>
+<body>
+    <div class="container">
+        <h1 class="text-center">Welcome to EPI IRC</h1>
+        <div id="message-container" class="border bg-light">
+            <!-- Messages will be displayed here -->
+        </div>
+        <form id="message-form" class="form-inline mt-4">
+            <input type="text" id="message-input" class="form-control mb-2 mr-sm-2" placeholder="Enter your message...">
+            <button type="submit" class="btn btn-primary mb-2">Send</button>
+        </form>
+        <!-- Greeting message container with placeholder $NAME -->
+        <div id="greeting-container">
+            <p>Greetings $NAME!</p>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.2/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+
+        const socket = io(); // Connect to the Socket.io server
+    
+        // When the form is submitted, emit a 'chat message' event to the server
+        $('#message-form').submit(function(e) {
+            e.preventDefault();
+            socket.emit('chat message', $('#message-input').val());
+            $('#message-input').val('');
+            return false;
+        });
+    
+        // Listen for 'chat message' events from the server and add to the message container
+        socket.on('chat message', function(msg) {
+            $('#message-container').append($('<p>').text(msg));
+        });
+    </script>
+    
+</body>
+</html>
+
